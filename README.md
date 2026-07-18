@@ -30,28 +30,64 @@
 
 # Команды и их описание
 
-
-
 root@srv1:~# apt list --installed | grep zfs
-
 root@srv1:~# zpool list
+
+-- смотрим, что нужный пакет у нас стоит и zfs есть
+
 root@srv1:~# lsblk
+
+-- смотрим блочные устройства, выбираем диски под  четыре датасета, raid1
+
 root@srv1:~# zpool create test_pool1 mirror /dev/sdb /dev/sdc
 root@srv1:~# zpool create test_pool2 mirror /dev/sdd /dev/sde
 root@srv1:~# zpool create test_pool3 mirror /dev/sdf /dev/sdg
 root@srv1:~# zpool create test_pool4 mirror /dev/sdh /dev/sdi
+
+-- создали четыре пула
+
 root@srv1:~# zpool list
 root@srv1:~# zfs set compression=lzjb test_pool1
+
+-- установили локальный параметр, алгоритм сжатия lzjb для фс test_pool1
+
 root@srv1:~# zfs set compression=lz4 test_pool2
+
+-- установили локальный параметр, алгоритм сжатия lz4 для фс test_pool2
+
 root@srv1:~# zfs set compression=gzip-9 test_pool3
+
+-- установили локальный параметр, алгоритм сжатия gzip-9 для фс test_pool3
+
 root@srv1:~# zfs set compression=zle test_pool4
+
+-- установили локальный параметр, алгоритм сжатия zle для фс test_pool4
+
 root@srv1:~# zfs get all | grep compression
+
+-- проверили, что установили то что нужно
+
 root@srv1:~# for i in {1..4}; do wget -P /test_pool$i https://gutenberg.org/cache/epub/2600/pg2600.converter.log; done
+
+-- в корень каждой фс копируем с сайта файл pg2600.converter.log
+
 root@srv1:~# ls -l /test_pool*
+
+-- смотрим что получилось, замечаем что итоговый размер в папке каждой фс разный
+
 root@srv1:~# zfs list
+
+-- здесь явно видно что наименьшее используемое пространство занимает фс test_pool3 с алгоритмом сжатия gzip-9, то есть он сжимает опытные данные лучше всех остальных
+
 root@srv1:~# zfs get all | grep compressratio | grep -v ref
+
+-- смотрим % сжания для наших фс
+
 root@srv1:~# wget -O archive.tar.gz --no-check-certificate 'https://drive.usercontent.google.com/download?id=1MvrcEp-
 WgAQe57aDEzxSRalPAwbNN1Bb&export=download'
+
+
+
 root@srv1:~# tar -xzvf archive.tar.gz
 root@srv1:~# ls -l ./zpoolexport/
 root@srv1:~# zpool import -d zpoolexport/
