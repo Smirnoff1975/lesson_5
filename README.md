@@ -31,6 +31,7 @@
 # Команды и их описание
 
 root@srv1:~# apt list --installed | grep zfs
+
 root@srv1:~# zpool list
 
 -- смотрим, что нужный пакет у нас стоит и zfs есть
@@ -40,13 +41,17 @@ root@srv1:~# lsblk
 -- смотрим блочные устройства, выбираем диски под  четыре пула, raid1
 
 root@srv1:~# zpool create test_pool1 mirror /dev/sdb /dev/sdc
+
 root@srv1:~# zpool create test_pool2 mirror /dev/sdd /dev/sde
+
 root@srv1:~# zpool create test_pool3 mirror /dev/sdf /dev/sdg
+
 root@srv1:~# zpool create test_pool4 mirror /dev/sdh /dev/sdi
 
 -- создали четыре пула
 
 root@srv1:~# zpool list
+
 root@srv1:~# zfs set compression=lzjb test_pool1
 
 -- установили локальный параметр, алгоритм сжатия lzjb для фс test_pool1
@@ -83,15 +88,25 @@ root@srv1:~# zfs get all | grep compressratio | grep -v ref
 
 -- смотрим % сжания для наших фс
 
+-- для определения настроек zfs скачаем скачаем с сайта конфигурацию собранную на файлах - "дисках"
+
 root@srv1:~# wget -O archive.tar.gz --no-check-certificate 'https://drive.usercontent.google.com/download?id=1MvrcEp-
 WgAQe57aDEzxSRalPAwbNN1Bb&export=download'
 
-
-
 root@srv1:~# tar -xzvf archive.tar.gz
+
+-- развернем скачанный архив в текущую папку
+
 root@srv1:~# ls -l ./zpoolexport/
+
 root@srv1:~# zpool import -d zpoolexport/
+
+-- проверим что файлы корректны и готовы к импорту
+
 root@srv1:~# zpool import -d zpoolexport/ otus
+
+-- импортируем конфигурацию в zpool otus
+
 root@srv1:~# zfs get available otus
 root@srv1:~# zfs get readonly otus
 root@srv1:~# zfs get recordsize otus
