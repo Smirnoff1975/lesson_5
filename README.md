@@ -37,7 +37,7 @@ root@srv1:~# zpool list
 
 root@srv1:~# lsblk
 
--- смотрим блочные устройства, выбираем диски под  четыре датасета, raid1
+-- смотрим блочные устройства, выбираем диски под  четыре пула, raid1
 
 root@srv1:~# zpool create test_pool1 mirror /dev/sdb /dev/sdc
 root@srv1:~# zpool create test_pool2 mirror /dev/sdd /dev/sde
