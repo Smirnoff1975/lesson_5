@@ -24,7 +24,52 @@
   - скопировать файл из удаленной директории;
   - восстановить файл локально. zfs receive;
   - найти зашифрованное сообщение в файле secret_message.# Среда выполнения
-  - VM VirtualBox 7.0.10, OS Ubuntu 24.04.03
+
+# Среда выполнения
+  VM VirtualBox 7.0.10, OS Ubuntu 24.04.03
+
+# Команды и их описание
+
+
+
+root@srv1:~# apt list --installed | grep zfs
+
+root@srv1:~# zpool list
+root@srv1:~# lsblk
+root@srv1:~# zpool create test_pool1 mirror /dev/sdb /dev/sdc
+root@srv1:~# zpool create test_pool2 mirror /dev/sdd /dev/sde
+root@srv1:~# zpool create test_pool3 mirror /dev/sdf /dev/sdg
+root@srv1:~# zpool create test_pool4 mirror /dev/sdh /dev/sdi
+root@srv1:~# zpool list
+root@srv1:~# zfs set compression=lzjb test_pool1
+root@srv1:~# zfs set compression=lz4 test_pool2
+root@srv1:~# zfs set compression=gzip-9 test_pool3
+root@srv1:~# zfs set compression=zle test_pool4
+root@srv1:~# zfs get all | grep compression
+root@srv1:~# for i in {1..4}; do wget -P /test_pool$i https://gutenberg.org/cache/epub/2600/pg2600.converter.log; done
+root@srv1:~# ls -l /test_pool*
+root@srv1:~# zfs list
+root@srv1:~# zfs get all | grep compressratio | grep -v ref
+root@srv1:~# wget -O archive.tar.gz --no-check-certificate 'https://drive.usercontent.google.com/download?id=1MvrcEp-
+WgAQe57aDEzxSRalPAwbNN1Bb&export=download'
+root@srv1:~# tar -xzvf archive.tar.gz
+root@srv1:~# ls -l ./zpoolexport/
+root@srv1:~# zpool import -d zpoolexport/
+root@srv1:~# zpool import -d zpoolexport/ otus
+root@srv1:~# zfs get available otus
+root@srv1:~# zfs get readonly otus
+root@srv1:~# zfs get recordsize otus
+root@srv1:~# zfs get compression otus
+root@srv1:~# zfs get checksum otus
+root@srv1:~# wget -O otus_task2.file --no-check-certificate 'https://drive.usercontent.google.com/download?id=1wgxjih8YZ-
+cqLqaZVa0lA3h3Y029c3oI&export=download'
+root@srv1:~# ls
+root@srv1:~# zfs receive otus/test@today < otus_task2.file
+root@srv1:~# ls /otus
+root@srv1:~# ls /otus/test
+root@srv1:~# find /otus/test -name "secret_message"
+root@srv1:~# cat /otus/test/task1/file_mess/secret_message
+
 
 # Протокол выполнения
 root@srv1:~# apt list --installed | grep zfs
