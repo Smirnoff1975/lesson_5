@@ -74,7 +74,7 @@ root@srv1:~# zfs get all | grep compression
 
 root@srv1:~# for i in {1..4}; do wget -P /test_pool$i https://gutenberg.org/cache/epub/2600/pg2600.converter.log; done
 
--- в корень каждой фс копируем с сайта файл pg2600.converter.log
+-- в корень каждой фс копируем с сайта файл pg2600.converter.log для проверки степени сжатия разных алгоритмов
 
 root@srv1:~# ls -l /test_pool*
 
@@ -108,21 +108,49 @@ root@srv1:~# zpool import -d zpoolexport/ otus
 -- импортируем конфигурацию в zpool otus
 
 root@srv1:~# zfs get available otus
+
+-- смотрим размер хранилища, 350Мб
+
 root@srv1:~# zfs get readonly otus
+
+-- смотрим его тип, чтение/запись
+
 root@srv1:~# zfs get recordsize otus
+
+-- смотрим размер логического блока, 128Кб
+
 root@srv1:~# zfs get compression otus
+
+-- смотрим алгоритм сжатия, zle
+
 root@srv1:~# zfs get checksum otus
+
+-- смотрим какая используется контрольная сумма, sha256
+
 root@srv1:~# wget -O otus_task2.file --no-check-certificate 'https://drive.usercontent.google.com/download?id=1wgxjih8YZ-
 cqLqaZVa0lA3h3Y029c3oI&export=download'
+
+-- для тестирования снапшота с сайта скопируем снапшот для фс otus/test выгруженный в файл
+
 root@srv1:~# ls
 root@srv1:~# zfs receive otus/test@today < otus_task2.file
+
+-- восстанавливаем снапшот
+
 root@srv1:~# ls /otus
 root@srv1:~# ls /otus/test
 root@srv1:~# find /otus/test -name "secret_message"
+
+-- проверяем восстановление, ищем файл secret_message
+
 root@srv1:~# cat /otus/test/task1/file_mess/secret_message
+
+-- выводим его содержимоем, должны получить веб-адрес
+-- получили https://otus.ru/lessons/linux-hl/
 
 
 # Протокол выполнения
+
 root@srv1:~# apt list --installed | grep zfs
 
 WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
