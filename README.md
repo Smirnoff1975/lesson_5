@@ -133,12 +133,15 @@ cqLqaZVa0lA3h3Y029c3oI&export=download'
 -- для тестирования снапшота с сайта скопируем снапшот для фс otus/test выгруженный в файл
 
 root@srv1:~# ls
+
 root@srv1:~# zfs receive otus/test@today < otus_task2.file
 
 -- восстанавливаем снапшот
 
 root@srv1:~# ls /otus
+
 root@srv1:~# ls /otus/test
+
 root@srv1:~# find /otus/test -name "secret_message"
 
 -- проверяем восстановление, ищем файл secret_message
